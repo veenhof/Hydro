@@ -1,0 +1,3 @@
+#http://domoticx.com/raspberry-pi-temperatuur-sensor-ds18b20-uitlezen/
+
+cat /sys/bus/w1/devices/28-0000054871cb/w1_slave | sed -n 's/^.*\(t=[^ ]*\).*/\1/p' | sed 's/t=//' | awk '{x=$1}END{print(x/1000)}'
