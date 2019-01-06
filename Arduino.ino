@@ -1,4 +1,4 @@
-#include <ECSalinity.h>
+//#include <ECSalinity.h>
 
 /*
  # This sample code is used to test the pH meter V1.1.
@@ -31,19 +31,15 @@ OneWire oneWire(ONE_WIRE_BUS);
 // Pass our oneWire reference to Dallas Temperature. 
 DallasTemperature sensors(&oneWire);
 /********************************************************************/ 
-#include <ECSalinity.h>
-EC_Salinity ec;
-
-
 
 void setup(void)
 {
   pinMode(LED,OUTPUT);  
   Serial.begin(9600);  
-  Serial.println("pH meter experiment!");    //Test the serial monitor
-  Serial.print(" Requesting temperatures..."); 
+//Serial.println("pH meter experiment!");    //Test the serial monitor
+//  Serial.print(" Requesting temperatures..."); 
   sensors.requestTemperatures(); // Send the command to get temperature readings 
-  Serial.println("DONE"); 
+  //Serial.println("DONE"); 
 }
 void loop(void)
 {
@@ -62,27 +58,31 @@ void loop(void)
  float Celcius=0;
  float Fahrenheit=0;
 
-  if(millis() - printTime > printInterval)   //Every 800 milliseconds, print a numerical, convert the state of the LED indicator
-  {
-  Serial.print("     Voltage:");
-        Serial.print(voltage,2);
-        Serial.print("    pH value: ");
-  Serial.println(pHValue,2);
-        digitalWrite(LED,digitalRead(LED)^1);
-        printTime=millis();
-        Serial.print("Temperature is: "); 
-  
-  sensors.requestTemperatures(); 
+sensors.requestTemperatures(); 
   Celcius=sensors.getTempCByIndex(0);
   Fahrenheit=sensors.toFahrenheit(Celcius);
-  Serial.print(" C  ");
-  Serial.print(Celcius);
-  Serial.print(" F  ");
-  Serial.println(Fahrenheit);
+ 
+ 
+  if(millis() - printTime > printInterval)   //Every 800 milliseconds, print a numerical, convert the state of the LED indicator
+  {
+  Serial.print("Voltage");
+        Serial.print(voltage,2);
+        Serial.print("pH");
+  Serial.println(pH,2);
+        digitalWrite(LED,digitalRead(LED)^1);
+        printTime=millis();
+        Serial.print(Temperature,2); 
+        Serial.print(Celcius);
+   
+  //  Serial.print(" C  ");
+  
+  //Serial.print(" F  ");
+  //Serial.println(Fahrenheit);
   delay(1000); // Why "byIndex"?  
    // You can have more than one DS18B20 on the same bus.  
    // 0 refers to the first IC on the wire 
  // loop through and take continous measurements
+  /*
   ec.measureEC();
   Serial.print("mS/cm: ");
   Serial.println(ec.mS);
@@ -91,6 +91,8 @@ void loop(void)
   Serial.println("-----");
   delay(1000); 
         delay(1000); 
+        
+  */      
   }
 }
 
