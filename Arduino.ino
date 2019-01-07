@@ -1,5 +1,3 @@
-//#include <ECSalinity.h>
-
 /*
  # This sample code is used to test the pH meter V1.1.
  # Editor : YouYou
@@ -10,10 +8,22 @@
 */
 /********************************************************************/
 // First we include the libraries
-#include <OneWire.h> 
+#include <OneWire.h>
 #include <DallasTemperature.h>
+#include "DHT.h"
 /********************************************************************/
-// Data wire is plugged into pin 2 on the Arduino 
+
+#define DHTPIN 7     // what digital pin we're connected to
+#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
+
+// Connect pin 1 (on the left) of the sensor to +5V
+// Connect pin 2 of the sensor to whatever your DHTPIN is
+// Connect pin 4 (on the right) of the sensor to GROUND
+// Connect a 10K resistor from pin 2 (data) to pin 1 (power) of the sensor
+
+DHT dht(DHTPIN, DHTTYPE);
+
+// Data wire is plugged into pin 2 on the Arduino
 #define ONE_WIRE_BUS 2        //Temp sensor D2
 #define SensorPin A0          //pH meter Analog output to Arduino Analog Input 2
 #define Offset 0.08           //deviation compensate
@@ -22,27 +32,55 @@
 #define printInterval 800
 #define ArrayLenth  40    //times of collection
 int pHArray[ArrayLenth];   //Store the average value of the sensor feedback
-int pHArrayIndex=0;    
-
-// Setup a oneWire instance to communicate with any OneWire devices  
-// (not just Maxim/Dallas temperature ICs) 
-OneWire oneWire(ONE_WIRE_BUS); 
-/********************************************************************/
-// Pass our oneWire reference to Dallas Temperature. 
+int pHArrayIndex=0;
+OneWire oneWire(ONE_WIRE_BUS);   
 DallasTemperature sensors(&oneWire);
-/********************************************************************/ 
+DHT dht(DHTPIN, DHTTYPE);
 
 void setup(void)
 {
-  pinMode(LED,OUTPUT);  
-  Serial.begin(9600);  
-//Serial.println("pH meter experiment!");    //Test the serial monitor
-//  Serial.print(" Requesting temperatures..."); 
-  sensors.requestTemperatures(); // Send the command to get temperature readings 
-  //Serial.println("DONE"); 
+  dht.begin();
+  pinMode(LED,OUTPUT);
+  Serial.begin(9600);
+  sensors.requestTemperatures(); // Send the command to get temperature readings
 }
 void loop(void)
-{
+{     //begin of dht22
+   float h = dht.readHumidity();
+  // Read temperature as Celsius (the default)
+  float t = dht.readTemperature();
+  // Read temperature as Fahrenheit (isFahrenheit = true)
+  float f = dht.readTemperature(true);
+  // Check if any reads failed and exit early (to try again).
+  if (isnan(h) || isnan(t) || isnan(f)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+
+  // Compute heat index in Fahrenheit (the default)
+  float hif = dht.computeHeatIndex(f, h);
+  // Compute heat index in Celsius (isFahreheit = false)
+  float hic = dht.computeHeatIndex(t, h, false);
+
+  Serial.print("Humidity: ");
+  Serial.print("  ");
+  Serial.print(h);
+  Serial.print("  ");
+  Serial.print("Temperature: ");
+  Serial.print("  ");
+  Serial.print(t);
+  Serial.print("  ");
+  Serial.print(f);
+  Serial.print("  ");
+  Serial.print("Heat index: ");
+  Serial.print("  ");
+  Serial.print(hic);
+  Serial.print("  ");
+  Serial.print(hif);
+  Serial.println("  ");
+}
+//end for DHT
+{^//begin voor PH sensor
   static unsigned long samplingTime = millis();
   static unsigned long printTime = millis();
   static float pHValue,voltage;
@@ -50,53 +88,20 @@ void loop(void)
   {
       pHArray[pHArrayIndex++]=analogRead(SensorPin);
       if(pHArrayIndex==ArrayLenth)pHArrayIndex=0;
-      voltage = avergearray(pHArray, ArrayLenth)*5.0/1024;
+      //voltage = avergearray(pHArray, ArrayLenth)*5.0/1024;
       pHValue = 3.5*voltage+Offset;
       samplingTime=millis();
   }
-  
- float Celcius=0;
- float Fahrenheit=0;
-
-sensors.requestTemperatures(); 
-  Celcius=sensors.getTempCByIndex(0);
-  Fahrenheit=sensors.toFahrenheit(Celcius);
- 
- 
-  if(millis() - printTime > printInterval)   //Every 800 milliseconds, print a numerical, convert the state of the LED indicator
+  if(millis() - printTime > printInterval)
   {
-  Serial.print("Voltage");
+        Serial.print("Voltage:");
         Serial.print(voltage,2);
-        Serial.print("pH");
-  Serial.println(pH,2);
+        Serial.print("pH:");
+        Serial.println(pHValue,2);
         digitalWrite(LED,digitalRead(LED)^1);
         printTime=millis();
-        Serial.print(Temperature,2); 
-        Serial.print(Celcius);
-   
-  //  Serial.print(" C  ");
-  
-  //Serial.print(" F  ");
-  //Serial.println(Fahrenheit);
-  delay(1000); // Why "byIndex"?  
-   // You can have more than one DS18B20 on the same bus.  
-   // 0 refers to the first IC on the wire 
- // loop through and take continous measurements
-  /*
-  ec.measureEC();
-  Serial.print("mS/cm: ");
-  Serial.println(ec.mS);
-  Serial.print("TDS: ");
-  Serial.println(ec.PPM_500);
-  Serial.println("-----");
-  delay(1000); 
-        delay(1000); 
-        
-  */      
   }
 }
-
-
 double avergearray(int* arr, int number){
   int i;
   int max,min;
@@ -136,3 +141,6 @@ double avergearray(int* arr, int number){
   }//if
   return avg;
 }
+// einde van PH?   geen idee
+float Celcius=0;
+
