@@ -8,15 +8,16 @@
 //1. PH  pin a2
 //2. DHT pin D7       5v
 //3. Waterflow sensor D2    5v
+//4. WaterTemp sensor D3
 
 //MOET NOG GEBEUREN:
-//1. TEMP sensor op raspberry?
 //2. TDS op Arduino
 //
 //
 // Data wire is plugged into pin 2 on the Arduino
-#define ONE_WIRE_BUS 2        //Temp sensor D2
+#define ONE_WIRE_BUS 3        //WaterTemp sensor  D2
 #define SensorPin A0          //pH meter Analog output to Arduino Analog Input 2
+#define DHTPIN 7     // what digital pin we're connected to
 #define Offset 0.08           //deviation compensate
 #define LED 13
 #define samplingInterval 20
@@ -24,15 +25,15 @@
 #define ArrayLenth  40    //times of collection
 int pHArray[ArrayLenth];   //Store the average value of the sensor feedback
 int pHArrayIndex=0;
-OneWire oneWire(2);
+OneWire oneWire(3);
 DallasTemperature sensors(&oneWire);
 
-#define DHTPIN 7     // what digital pin we're connected to
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
-
 DHT dht(DHTPIN, DHTTYPE);
 
 byte statusLed    = 13;
+
+
 byte sensorInterrupt = 0;  // 0 = digital pin 2
 byte sensorPin       = 2;
 
@@ -84,32 +85,39 @@ void loop(void)  {
       pHValue = 3.5*voltage+Offset;
       samplingTime=millis();
 
-        if(millis() - printTime > printInterval)        
+        if(millis() - printTime > printInterval) {
+        delay(1000);
         Serial.println();  
-        Serial.print("Voltage:");
+        Serial.print("Voltage:   ");
         Serial.print(voltage,2);
+        delay(1000);
         Serial.println();
-        Serial.print("pH:");
+        delay(1000);
+        Serial.print("pH:   ");
         Serial.println(pHValue,2);
+        
         digitalWrite(LED,digitalRead(LED)^1);
         printTime=millis();
-        
 
-  delay(10000);
+        }
+
+  delay(1000);
   float h = dht.readHumidity();
   float t = dht.readTemperature();
   float f = dht.readTemperature(true);
   float hif = dht.computeHeatIndex(f, h);
   float hic = dht.computeHeatIndex(t, h, false);
 
-  Serial.print("Humidity:");
+  delay(1000);
+  Serial.print("Humidity:   ");
   Serial.print(h);
 
+  delay(1000);
   Serial.println();
-  Serial.print("Temperature:");
+  Serial.print("Temperature:   ");
   Serial.print(t,2);
   Serial.print(f);
-  //Serial.println();
+  Serial.println();
 
 
     
@@ -131,11 +139,12 @@ void loop(void)  {
       
     unsigned int frac;
     
-    // Print the flow rate for this second in litres / minute
+    // Print the F for this second in litres / minute
+    delay(1000);
     Serial.println();
-    Serial.print("Flow rate:");
+    Serial.print("Flow_rate:   ");
     Serial.print(int(flowRate));  // Print the integer part of the variable
-    Serial.print("L/min");
+    Serial.print("  L/min");
     Serial.print("\t");       // Print tab space
 
     // Reset the pulse counter so we can start incrementing again
