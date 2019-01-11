@@ -12,10 +12,9 @@
 //3. Waterflow sensor D2    5v
 //4. WaterTemp sensor D3
 //5. TDS Sensor A1
+//6. Data wire is plugged into pin D3 on the Arduino
 
-// Data wire is plugged into pin 2 on the Arduino??
-
-#define ONE_WIRE_BUS 3        //WaterTemp sensor  D2
+#define ONE_WIRE_BUS 3        //WaterTemp sensor  D3
 #define SensorPin A0          //pH meter Analog output to Arduino Analog Input 2
 #define DHTPIN 7     // what digital pin we're connected to
 #define Offset 0.08           //deviation compensate
@@ -105,7 +104,7 @@ void loop(void)  {
 
         }
 //TDS sensor
- //temperature = readTemperature();  //add your temperature sensor and read it
+ temperature = DallasTemperature.readTemperature();  //add your temperature sensor and read it
  //value, that is: TDS = EC / 2
     Serial.println();
     gravityTds.setTemperature(temperature);  // set the temperature and execute temperature compensation
