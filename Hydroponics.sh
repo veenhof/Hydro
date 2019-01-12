@@ -20,6 +20,25 @@ AIR_HUMIDITY=
 VALVE_IN=
 VALVE_OUT=
 
+#Some Info
+#GPIO | Relay   |   Function   5V  / 12V Relais
+#---------------|
+#17    1        | 1ste pomp PH -
+#27    2        | 2de  Pomp PH +
+#22    3        | 2x Feeding Pumps
+#25    4        | Waterpomp MAIN
+#24    5        | Waterpomp naar Koelvat
+#23    6        | Fans "In & Uit"
+#NVT   7        |
+#NVT   8        |
+#
+#GPIO | Relay   |   Function  220V RELAIS!
+#---------------|
+#21      1      |
+#20      2      | Cyclops Watermenger
+#16      3      | COB LEDJES
+#NVT     4      |
+
 ## DB VARIABLES
 user="root"
 dbname="Hydroponics"
