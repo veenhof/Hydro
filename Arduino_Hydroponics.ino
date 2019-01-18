@@ -6,13 +6,13 @@
 #include <EEPROM.h>
 #include <GravityTDS.h>
 /********************************************************************/
-//Werkende Sensors:
+//sensors ATM
 //1. PH  pin A2
 //2. DHT pin D7       5v
 //3. Waterflow sensor D2    5v
 //4. WaterTemp sensor D3
 //5. TDS Sensor A1
-//6. Data wire is plugged into pin D3 on the Arduino
+//6. 
 
 #define ONE_WIRE_BUS 3        //WaterTemp sensor  D3
 #define SensorPin A0          //pH meter Analog output to Arduino Analog Input 2
@@ -52,7 +52,7 @@ void setup(void) {
   Serial.begin(9600);
   sensors.requestTemperatures(); // Send the command to get temperature readings
   dht.begin();
-
+    
 // Waterflow sensor code
  // Set up the status LED line as an output
   pinMode(statusLed, OUTPUT);
@@ -127,13 +127,18 @@ void loop(void)  {
 
   delay(1000);
   Serial.println();
-  Serial.print("Temperature:   ");
+  Serial.print("Air_Temperature:   ");
   Serial.print(t,2);
   Serial.print(f);
   Serial.println();
-
-
-    
+  Serial.println();
+  
+  //DS18b20 Watertemp sensor
+  sensors.requestTemperatures();
+  Serial.print("Celsius temperature: ");
+  Serial.print(sensors.getTempCByIndex(0));
+  Serial.println();
+  
     if((millis() - oldTime) > 1000)
    {
 // Disable the interrupt while calculating flow rate and sending the value to
