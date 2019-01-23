@@ -15,14 +15,14 @@
 //6. 
 
 #define ONE_WIRE_BUS 3        //WaterTemp sensor  D3
-#define SensorPin A0          //pH meter Analog output to Arduino Analog Input 2
+#define SensorPin A2          //pH meter Analog output to Arduino Analog Input 2
 #define DHTPIN 7     // what digital pin we're connected to
+#define TdsSensorPin A1   // TDS Sensor output on A1
 #define Offset 0.08           //deviation compensate
 #define LED 13
 #define samplingInterval 20
 #define printInterval 800
 #define ArrayLenth  40    //times of collection
-#define TdsSensorPin A1   // TDS Sensor output on A1
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
 
 int pHArray[ArrayLenth];   //Store the average value of the sensor feedback
