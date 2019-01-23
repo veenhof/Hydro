@@ -1,0 +1,31 @@
+#!/usr/bin/python
+import RPi.GPIO as GPIO
+import time
+
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)  # Disable Warnings
+
+
+
+gpioList = [24, 23, 18, 22, 27, 17, 25, 11]
+
+
+#Set our GPIO pins to outputs and set them to off
+
+for i in gpioList:
+    GPIO.setup(i, GPIO.OUT)
+    GPIO.output(i, GPIO.False)
+
+# Sleep time variables
+
+sleepTime = 0.5
+
+try:
+    while True:
+        for i in gpioList:
+            GPIO.output(i, GPIO.HIGH)
+            time.sleep(sleepTime);
+            GPIO.output(i, GPIO.LOW)
+
+    GPIO.cleanup()
