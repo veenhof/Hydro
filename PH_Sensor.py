@@ -1,4 +1,32 @@
 import time
+#import automationhat
+
+from gpiozero import MCP3008
+adc = MCP3008(channel=0)
+adc_ref = 3.3
+voltage = adc_ref * adc.value
+print("channel 0 voltage is: ", voltage)
+
+while True:
+    try:
+        # Read sensor value
+        sensor_value = MCP3008(channel=0)
+
+        # Calculate PH
+        ph = 7 - 1000 * (float)(voltage) * adc_ref / 59.16 / 1023
+
+        print(" ph =", ph)
+    except IOError:
+        print ("Error")
+
+
+
+        
+        
+#hieronder nodig voor automationhat        
+        
+        
+import time
 import automationhat
 
 from gpiozero import MCP3008
