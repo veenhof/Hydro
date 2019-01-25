@@ -52,15 +52,15 @@ password="VerySecret"
 
 if expr $PH '<' $PH_LOW>/dev/null; then
     echo "TE LAAG!, PH+ erin aub!"
-
+python ./relais/ph_plus.py
 #PH+ motor aan
 #Cyclone Pump aan
 
 
 elif expr $PH '>' $PH_HIGH>/dev/null; then
     echo "PH te HOOG!   PH- BIJGOOIEN AUB"
+    python ./relais/ph_min.py
 
-#PH- motor aan
 #Cyclone Pump aan
 
 else
