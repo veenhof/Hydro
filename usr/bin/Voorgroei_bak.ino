@@ -34,6 +34,26 @@ void setup() {
 */
 
 myRTC.setDS1302Time(00, 05, 00, 28, 01, 07, 2019);
+
+// create the alarms 
+Alarm.alarmRepeat(19,0,5, FarRedOn); // 19:05 every day
+Alarm.alarmRepeat(19,0,10,FarRedOff); // 19:00:10 every day 
+
+Alarm.alarmRepeat(19,0,11, RedOn); // 19:00:11 every day 
+Alarm.alarmRepeat(19,0,16, RedOff); // 19:00:16 every day
+
+Alarm.timerRepeat(15, Repeats); // timer for every 15 seconds 
+}
+
+void FarRedOn(){
+Serial.println("Far Red lights on"); 
+digitalWrite(RELAY1,HIGH); // Turns ON Relay 1
+delay(2000); 
+}
+
+void FarRedOff(){
+Serial.println("Far Red lights off");
+digitalWrite(RELAY1,LOW); // Turns Relay 1 Off
 }
 
 void loop() {
