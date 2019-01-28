@@ -1,7 +1,8 @@
 //Time Module
 //Relay Module
 //DHT22
-
+#include <Time.h>
+#include <TimeAlarms.h>
 #include <MyRealTimeClock.h>
 #include "DHT.h"
 #include <OneWire.h> 
@@ -10,8 +11,8 @@
 #define DHTPIN 4     // what pin we're connected to
 #define DHTTYPE DHT22   // DHT 22  (AM2302)
 #define ONE_WIRE_BUS 2 // ds18b20   water temperature
-#define Relay_One 11
-#define Relay_Two 12
+#define RELAY1 11
+#define RELAY2 12
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
@@ -24,7 +25,7 @@ int maxTemp = 30;
 DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
-  pinMode(Relay_One, OUTPUT);
+  pinMode(RELAY1, OUTPUT);
   Serial.begin(9600); 
   dht.begin();
   sensors.begin(); 
@@ -36,13 +37,10 @@ void setup() {
 myRTC.setDS1302Time(00, 05, 00, 28, 01, 07, 2019);
 
 // create the alarms 
-Alarm.alarmRepeat(19,0,5, FarRedOn); // 19:05 every day
-Alarm.alarmRepeat(19,0,10,FarRedOff); // 19:00:10 every day 
 
-Alarm.alarmRepeat(19,0,11, RedOn); // 19:00:11 every day 
-Alarm.alarmRepeat(19,0,16, RedOff); // 19:00:16 every day
+Alarm.alarmRepeat(19,0,11, FarRedOn); // 19:00:11 every day 
+Alarm.alarmRepeat(19,0,16, FarRedOff); // 19:00:16 every day
 
-Alarm.timerRepeat(15, Repeats); // timer for every 15 seconds 
 }
 
 void FarRedOn(){
@@ -103,11 +101,11 @@ delay( 5000);
   }
  
   if(h > maxHum || t > maxTemp) {
-      digitalWrite(Relay_One, HIGH);
+      digitalWrite(RELAY1, HIGH);
       Serial.print("Relay aan, temp of Humidity hoger dan gewild");
       Serial.println("");
   } else {
-     digitalWrite(Relay_One, LOW); 
+     digitalWrite(RELAY1, LOW); 
   }
 
 
